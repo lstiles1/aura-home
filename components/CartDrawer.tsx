@@ -4,7 +4,7 @@
 */
 
 
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Product } from '../types';
 
 interface CartDrawerProps {
@@ -17,6 +17,16 @@ interface CartDrawerProps {
 
 const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose, items, onRemoveItem, onCheckout }) => {
   const total = items.reduce((sum, item) => sum + item.price, 0);
+  const drawerRef = useRef<HTMLDivElement>(null);
+
+  // Focus trap and accessibility
+  useEffect(() => {
+    if (isOpen && drawerRef.current) {
+      const focusableElements = drawerRef.current.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+      const firstElement = focusableElements[0] as HTMLElement;
+      firstElement?.focus();
+    }
+  }, [isOpen]);
 
   return (
     <>
@@ -30,6 +40,10 @@ const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose, items, onRemov
 
       {/* Drawer */}
       <div 
+        ref={drawerRef}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Shopping cart"
         className={`fixed inset-y-0 right-0 w-full md:w-[450px] bg-[#F5F2EB] z-[70] shadow-2xl transform transition-transform duration-500 ease-in-out border-l border-[#D6D1C7] flex flex-col ${
           isOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
@@ -38,8 +52,9 @@ const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose, items, onRemov
         <div className="flex items-center justify-between p-6 border-b border-[#D6D1C7]">
           <h2 className="text-xl font-serif text-[#2C2A26]">Your Cart ({items.length})</h2>
           <button 
-            onClick={onClose} 
-            className="text-[#A8A29E] hover:text-[#2C2A26] transition-colors"
+            onClick={onClose}
+            aria-label="Close cart"
+            className="text-[#A8A29E] hover:text-[#2C2A26] transition-colors p-2 -m-2 hover:bg-[#D6D1C7]/30 rounded-full"
           >
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
               <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />

@@ -4,7 +4,7 @@
 */
 
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import ProductGrid from './components/ProductGrid';
@@ -21,6 +21,7 @@ import { Product, JournalArticle, ViewState } from './types';
 function App() {
   const [view, setView] = useState<ViewState>({ type: 'home' });
   const [cartItems, setCartItems] = useState<Product[]>([]);
+  const [toast, setToast] = useState<{ message: string; visible: boolean }>({ message: '', visible: false });
   const [isCartOpen, setIsCartOpen] = useState(false);
 
   // Handle navigation (clicks on Navbar or Footer links)
@@ -65,8 +66,21 @@ function App() {
 
   const addToCart = (product: Product) => {
     setCartItems([...cartItems, product]);
-    setIsCartOpen(true);
+    setToast({ message: `${product.name} added to cart`, visible: true });
+    setTimeout(() => setToast({ message: '', visible: false }), 3000);
+    setTimeout(() => setIsCartOpen(true), 300);
   };
+
+  // Close cart drawer on Escape key
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isCartOpen) {
+        setIsCartOpen(false);
+      }
+    };
+    window.addEventListener('keydown', handleEscape);
+    return () => window.removeEventListener('keydown', handleEscape);
+  }, [isCartOpen]);
 
   const removeFromCart = (index: number) => {
     const newItems = [...cartItems];
@@ -128,8 +142,6 @@ function App() {
 
       {view.type !== 'checkout' && <Footer onLinkClick={handleNavClick} />}
       
-      <Assistant />
-      
       <CartDrawer 
         isOpen={isCartOpen}
         onClose={() => setIsCartOpen(false)}
@@ -141,6 +153,16 @@ function App() {
             setView({ type: 'checkout' });
         }}
       />
+
+      {/* Toast Notification */}
+      <div className={`fixed bottom-8 left-1/2 -translate-x-1/2 z-[80] transition-all duration-500 ${toast.visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'}`}>
+        <div className="bg-[#2C2A26] text-[#F5F2EB] px-8 py-4 rounded-full shadow-2xl flex items-center gap-3">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <span className="text-sm font-medium">{toast.message}</span>
+        </div>
+      </div>
     </div>
   );
 }

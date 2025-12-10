@@ -37,13 +37,13 @@ const Hero: React.FC = () => {
       {/* Background Image - Warm Minimalist Home */}
       <div className="absolute inset-0 w-full h-full">
         <img 
-            src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&q=80&w=2000" 
-            alt="Minimalist warm living room" 
+            src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&q=80&w=2000" 
+            alt="Modern minimalist bedroom" 
             className="w-full h-full object-cover animate-[scale_20s_ease-in-out_infinite_alternate]"
         />
         {/* Gradient Overlay for Text Readability */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/40"></div>
-        <div className="absolute inset-0 bg-[#2C2A26]/20"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/50"></div>
+        <div className="absolute inset-0 bg-[#2C2A26]/30"></div>
       </div>
 
       {/* Content */}
