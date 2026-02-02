@@ -16,6 +16,7 @@ import ProductDetail from './components/ProductDetail';
 import JournalDetail from './components/JournalDetail';
 import CartDrawer from './components/CartDrawer';
 import Checkout from './components/Checkout';
+import { Analytics } from '@vercel/analytics/react';
 import { Product, JournalArticle, ViewState } from './types';
 
 function App() {
@@ -163,6 +164,7 @@ function App() {
           <span className="text-sm font-medium">{toast.message}</span>
         </div>
       </div>
+      <Analytics />
     </div>
   );
 }
